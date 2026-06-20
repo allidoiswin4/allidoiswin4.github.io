@@ -1,1 +1,872 @@
-soon
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO: tytuł i opis ===== -->
+<title>TypeRacer PL – Darmowy Test Szybkości Pisania po Polsku (WPM)</title>
+<meta name="description" content="Sprawdź swoją szybkość pisania na klawiaturze w darmowym teście TypeRacer po polsku. Mierz WPM, dokładność i odblokowuj kolejne samochody za szybkie wyniki.">
+<meta name="keywords" content="test szybkości pisania, typeracer po polsku, sprawdź wpm, ćwiczenie pisania na klawiaturze, test pisania online, szybkie pisanie po polsku">
+<meta name="author" content="TypeRacer PL">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="googlebot" content="index, follow">
+<meta name="theme-color" content="#0f0f1a">
+
+<!-- WAŻNE: zamień poniższy adres na prawdziwy adres swojej domeny po wdrożeniu -->
+<link rel="canonical" href="https://twoja-domena.pl/">
+
+<!-- ===== Open Graph (Facebook, LinkedIn, komunikatory) ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Szybkie-pisanie">
+<meta property="og:url" content="https://twoja-domena.pl/">
+<meta property="og:title" content="Szybkie Pisanie TypeRacer PL – Darmowy Test Szybkości Pisania po Polsku">
+<meta property="og:description" content="Sprawdź swoją szybkość pisania na klawiaturze w darmowym teście online. Mierz WPM, dokładność i odblokowuj nowe auta za lepsze wyniki.">
+<meta property="og:image" content="https://szybkiepisanie.dominik.ovh/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="pl_PL">
+
+<!-- ===== Twitter / X Card ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TypeRacer PL – Darmowy Test Szybkości Pisania po Polsku">
+<meta name="twitter:description" content="Sprawdź swoją szybkość pisania na klawiaturze. Mierz WPM, dokładność i odblokowuj nowe auta!">
+<meta name="twitter:image" content="https://szybkiepisanie.dominik.ovh/og-image.png">
+
+<!-- ===== Dane strukturalne Schema.org (JSON-LD) ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TypeRacer PL",
+  "alternateName": "Test szybkości pisania PL",
+  "url": "https://szybkiepisanie.dominik.ovh/",
+  "description": "Darmowy test szybkości pisania na klawiaturze po polsku. Mierz swoje WPM i dokładność, ścigaj się z czasem i odblokowuj nowe samochody.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Wymaga włączonego JavaScript",
+  "inLanguage": "pl-PL",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "PLN"
+  }
+}
+</script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f0f1a;
+    color: #e0e0f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+  }
+
+  .subtitle {
+    color: #6b6b9a;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+
+  .game-card {
+    background: #16162a;
+    border: 1px solid #2a2a4a;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 760px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  /* CARS & TRACK */
+  .track-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .car-lane {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .lane-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555580;
+    width: 70px;
+    text-align: right;
+    flex-shrink: 0;
+    transition: color 0.3s;
+  }
+
+  .lane-label.unlocked { color: #a78bfa; }
+
+  .track {
+    flex: 1;
+    height: 40px;
+    background: #0c0c1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  }
+
+  .track-line {
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, #2a2a4a 0, #2a2a4a 8px, transparent 8px, transparent 16px);
+  }
+
+  .car {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    transition: left 0.15s linear;
+    filter: drop-shadow(0 0 8px currentColor);
+    left: 2px;
+  }
+
+  .car.locked {
+    filter: grayscale(1) opacity(0.2);
+  }
+
+  .lock-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #444470;
+  }
+
+  .finish-flag {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.3;
+  }
+
+  /* TEXT DISPLAY */
+  .text-display {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    background: #0c0c1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    min-height: 95px;
+    word-break: break-word;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .char { color: #444470; transition: color 0.1s; }
+  .char.correct { color: #4ade80; text-shadow: 0 0 8px rgba(74, 222, 128, 0.4); }
+  .char.wrong { color: #f87171; background: #3a1010; border-radius: 3px; padding: 0 1px; }
+  .char.cursor {
+    border-left: 2px solid #a78bfa;
+    margin-left: -1px;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* INPUT */
+  .input-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  #typing-input {
+    flex: 1;
+    background: #0c0c1a;
+    border: 2px solid #2a2a4a;
+    border-radius: 12px;
+    color: #e0e0f0;
+    font-size: 1.05rem;
+    padding: 0.75rem 1.25rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+
+  #typing-input:focus { border-color: #7c3aed; box-shadow: 0 0 10px rgba(124, 58, 237, 0.3); }
+  #typing-input.error { border-color: #f87171; background: #1a0c0c; }
+  #typing-input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn {
+    background: #7c3aed;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+  .btn:hover { background: #6d28d9; box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4); }
+  .btn:active { transform: scale(0.97); }
+  .btn.secondary {
+    background: #2a2a4a;
+    color: #a0a0d0;
+    box-shadow: none;
+  }
+  .btn.secondary:hover { background: #333360; color: #fff; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: #0c0c1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #a78bfa;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: #555580;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* RESULT BANNER */
+  .result-banner {
+    display: none;
+    background: linear-gradient(135deg, #23154c, #16162a);
+    border: 1px solid #7c3aed77;
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)} }
+
+  .result-banner.show { display: block; }
+  .result-banner h3 { color: #a78bfa; margin-bottom: 0.3rem; font-size: 1.2rem; }
+  .result-banner .big { font-size: 2.2rem; font-weight: 800; color: #4ade80; text-shadow: 0 0 10px rgba(74,222,128,0.3); }
+  .result-banner .unlocked-msg { color: #fbbf24; font-size: 0.9rem; margin-top: 0.5rem; font-weight: 600; }
+
+  /* TABLES */
+  .tables-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 760px;
+    margin-bottom: 3rem;
+  }
+
+  .table-card {
+    background: #16162a;
+    border: 1px solid #2a2a4a;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .table-card h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7171a4;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th {
+    color: #555580;
+    font-weight: 600;
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 2px solid #2a2a4a;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 8px;
+    color: #c0c0e0;
+    border-bottom: 1px solid #1a1a35;
+  }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  td.wpm { color: #a78bfa; font-weight: 700; }
+  td.acc { color: #4ade80; }
+  td.gold { color: #fbbf24; font-weight: 700; }
+  td.silver { color: #94a3b8; font-weight: 700; }
+  td.bronze { color: #cd7c3c; font-weight: 700; }
+
+  tr:last-child td { border-bottom: none; }
+
+  .empty-row td {
+    color: #44446d;
+    font-style: italic;
+    padding: 15px 8px;
+    text-align: center;
+  }
+
+  /* CARS UNLOCK INFO */
+  .cars-info {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .car-badge {
+    background: #0c0c1a;
+    border: 1px solid #2a2a4a;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    transition: border-color 0.3s;
+  }
+
+  .car-badge.unlocked-badge { border-color: #7c3aed66; background: linear-gradient(145deg, #110f24, #0c0c1a); }
+  .car-badge .car-emoji { font-size: 1.4rem; }
+  .car-badge .car-name { color: #8080b0; font-weight: 600; }
+  .car-badge .car-req { color: #4a4a6a; font-size: 0.75rem; }
+  .car-badge.unlocked-badge .car-name { color: #a78bfa; }
+  .car-badge.unlocked-badge .car-req { color: #4ade80; font-weight: 500; }
+
+  /* FOOTER & MODAL STYLE */
+  footer {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: #444470;
+  }
+
+  .privacy-link {
+    color: #6b6b9a;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .privacy-link:hover { color: #a78bfa; }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(5, 5, 10, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal {
+    background: #16162a;
+    border: 1px solid #2a2a4a;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 550px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-overlay.active .modal {
+    transform: translateY(0);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #555580;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: #f87171; }
+
+  .modal h2 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #2a2a4a;
+    padding-bottom: 0.5rem;
+  }
+
+  .modal p {
+    font-size: 0.9rem;
+    color: #a0a0c0;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .modal ul {
+    margin-left: 1.25rem;
+    margin-bottom: 1rem;
+    color: #a0a0c0;
+    font-size: 0.9rem;
+  }
+
+  .modal li { margin-bottom: 0.4rem; }
+
+  @media (max-width: 580px) {
+    .tables-row { grid-template-columns: 1fr; gap: 1rem; }
+    h1 { font-size: 1.8rem; }
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🏁 Szybkie-Pisanie TypeRacer PL</h1>
+<p class="subtitle">Trenuj szybkie pisanie</p>
+<p class="subtitle">Pisz szybko — odblokuj nowe auta</p>
+
+
+<!-- Cars unlock info -->
+<div class="cars-info" id="cars-info"></div>
+
+<!-- Main game card -->
+<div class="game-card">
+
+  <!-- Track -->
+  <div class="track-container" id="track-container"></div>
+
+  <!-- Result banner -->
+  <div class="result-banner" id="result-banner">
+    <h3 id="result-title">Świetnie!</h3>
+    <div class="big" id="result-wpm">-- WPM</div>
+    <div style="color:#6b6b9a; font-size:0.85rem; margin-top:4px" id="result-acc"></div>
+    <div class="unlocked-msg" id="unlock-msg"></div>
+  </div>
+
+  <!-- Text to type -->
+  <div class="text-display" id="text-display"></div>
+
+  <!-- Input -->
+  <div class="input-row">
+    <input type="text" id="typing-input" placeholder="Zacznij pisać..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" disabled aria-label="Pole do wpisywania tekstu w teście szybkości pisania" />
+    <button class="btn" id="start-btn" onclick="startGame()" aria-label="Rozpocznij test szybkości pisania">Start</button>
+    <button class="btn secondary" id="reset-btn" onclick="resetGame()" style="display:none" aria-label="Zresetuj test">Reset</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-val" id="stat-wpm">--</div><div class="stat-label">WPM</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-acc">--%</div><div class="stat-label">Dokładność</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-time">0.0s</div><div class="stat-label">Czas</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-chars">0</div><div class="stat-label">Znaki</div></div>
+  </div>
+</div>
+
+<!-- Tables -->
+<div class="tables-row">
+  <div class="table-card">
+    <h3>⏱ Ostatnie podejście</h3>
+    <table>
+      <thead><tr><th>#</th><th>Słowa</th><th>WPM</th><th>Dokł.</th><th>Czas</th></tr></thead>
+      <tbody id="last-body"></tbody>
+    </table>
+  </div>
+  <div class="table-card">
+    <h3>🏆 Najlepsze czasy</h3>
+    <table>
+      <thead><tr><th>#</th><th>WPM</th><th>Dokł.</th><th>Czas</th></tr></thead>
+      <tbody id="top-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  © 2026 szybkie-pisanie <span class="privacy-link" onclick="toggleModal(true)">Polityka Prywatności</span>
+</footer>
+
+<!-- Modal Polityki Prywatności -->
+<div class="modal-overlay" id="privacy-modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="toggleModal(false)">&times;</button>
+    <h2>Polityka Prywatności</h2>
+    <p>Witaj w szybkie-pisanie! Twoja prywatność jest dla nas ważna. Poniżej znajdziesz informacje o tym, jak traktujemy Twoje dane.</p>
+    <p><strong>1. Dane lokalne (LocalStorage):</strong> Nasza strona zapisuje Twoje najlepsze wyniki oraz stan odblokowanych samochodów wyłącznie na Twoim urządzeniu, korzystając z pamięci przeglądarki (LocalStorage). Dane te nie są wysyłane na żadne zewnętrzne serwery.</p>
+    <p><strong>2. Pliki Cookies:</strong> Gra nie wykorzystuje ciasteczek śledzących ani marketingowych.</p>
+    <p><strong>3. Brak formularzy:</strong> Nie zbieramy Twoich adresów e-mail, haseł ani żadnych danych osobowych.</p>
+    <p>Baw się dobrze i szlifuj swoje umiejętności szybkiego pisania!</p>
+  </div>
+</div>
+
+<script>
+const TEXTS = [
+  "Szybki brązowy lis przeskakuje nad leniwym psem.",
+  "Programowanie to sztuka rozwiązywania problemów za pomocą logiki i kreatywności.",
+  "Polska jest pięknym krajem z bogatą historią i wspaniałą kulturą.",
+  "Każdy dzień jest nową okazją do nauki i doskonalenia swoich umiejętności.",
+  "Technologia zmienia świat szybciej niż kiedykolwiek wcześniej w historii ludzkości.",
+  "Klawiatura to most między myślami człowieka a cyfrowym światem.",
+  "Pisanie na klawiaturze wymaga regularnego ćwiczenia i skupienia uwagi.",
+  "W górach powietrze jest czyste a widoki zapierają dech w piersiach.",
+  "Dobra kawa i cicha muzyka to idealne towarzystwo podczas nauki.",
+  "Słowa mają moc zmieniania rzeczywistości gdy są użyte w odpowiedni sposób.",
+];
+
+// Zmieniono ostatni poziom z "Rakieta" na "Lambo"
+const CARS = [
+  { emoji: "🚗", name: "Fiat 126p", req: 0,   reqLabel: "Startowe",  color: "#a78bfa" },
+  { emoji: "🏎️", name: "Porsche",   req: 40,  reqLabel: "40 WPM",    color: "#f59e0b" },
+  { emoji: "🏎️💨", name: "Lambo",     req: 70,  reqLabel: "70 WPM",    color: "#34d399" },
+];
+
+let state = {
+  text: "",
+  words: [],
+  started: false,
+  finished: false,
+  startTime: null,
+  timerInterval: null,
+  typed: "",
+  errors: 0,
+  totalTyped: 0,
+  bestWpm: JSON.parse(localStorage.getItem("tr_bestWpm") || "0"),
+  topTimes: JSON.parse(localStorage.getItem("tr_topTimes") || "[]"),
+  lastRound: JSON.parse(localStorage.getItem("tr_lastRound") || "[]"),
+  unlockedCars: JSON.parse(localStorage.getItem("tr_unlockedCars") || "[0]"),
+};
+
+// Funkcje obsługi modala
+function toggleModal(show) {
+  const modal = document.getElementById("privacy-modal");
+  if (show) {
+    modal.classList.add("active");
+  } else {
+    modal.classList.remove("active");
+  }
+}
+
+function closeModalOutside(event) {
+  if (event.target.id === "privacy-modal") {
+    toggleModal(false);
+  }
+}
+
+function getActiveCar() {
+  const unlocked = state.unlockedCars;
+  return unlocked[unlocked.length - 1];
+}
+
+function buildTrack() {
+  const container = document.getElementById("track-container");
+  container.innerHTML = "";
+  CARS.forEach((car, i) => {
+    const isUnlocked = state.unlockedCars.includes(i);
+    const lane = document.createElement("div");
+    lane.className = "car-lane";
+    lane.innerHTML = `
+      <div class="lane-label ${isUnlocked ? 'unlocked' : ''}">${car.name}</div>
+      <div class="track" id="track-${i}">
+        <div class="track-line"></div>
+        <div class="finish-flag">🏁</div>
+        ${isUnlocked
+          ? `<div class="car" id="car-${i}" style="color:${car.color}">${car.emoji}</div>`
+          : `<div class="car locked" id="car-${i}">${car.emoji}</div><div class="lock-icon">🔒</div>`}
+      </div>`;
+    container.appendChild(lane);
+  });
+}
+
+function buildCarsInfo() {
+  const el = document.getElementById("cars-info");
+  el.innerHTML = CARS.map((car, i) => {
+    const unlocked = state.unlockedCars.includes(i);
+    return `<div class="car-badge ${unlocked ? 'unlocked-badge' : ''}">
+      <span class="car-emoji">${car.emoji}</span>
+      <span>
+        <div class="car-name">${car.name}</div>
+        <div class="car-req">${unlocked ? "✓ Odblokowane" : car.reqLabel}</div>
+      </span>
+    </div>`;
+  }).join("");
+}
+
+function setCarProgress(progress) {
+  CARS.forEach((_, i) => {
+    const carEl = document.getElementById(`car-${i}`);
+    const track = document.getElementById(`track-${i}`);
+    if (!carEl || !track) return;
+    const trackW = track.clientWidth - 36;
+    const pos = Math.min(progress, 1) * trackW;
+    carEl.style.left = Math.max(2, pos) + "px";
+  });
+}
+
+function pickText() {
+  return TEXTS[Math.floor(Math.random() * TEXTS.length)];
+}
+
+function renderText() {
+  const display = document.getElementById("text-display");
+  const typed = state.typed;
+  let html = "";
+  for (let i = 0; i < state.text.length; i++) {
+    let cls = "char";
+    if (i < typed.length) {
+      cls += typed[i] === state.text[i] ? " correct" : " wrong";
+    } else if (i === typed.length) {
+      cls += " cursor";
+    }
+    const ch = state.text[i] === " " ? "&nbsp;" : state.text[i];
+    html += `<span class="${cls}">${ch}</span>`;
+  }
+  display.innerHTML = html;
+}
+
+function calcWpm(chars, seconds) {
+  if (seconds < 0.5) return 0;
+  return Math.round((chars / 5) / (seconds / 60));
+}
+
+function calcAcc() {
+  if (state.totalTyped === 0) return 100;
+  return Math.round(((state.totalTyped - state.errors) / state.totalTyped) * 100);
+}
+
+function updateStats() {
+  if (!state.startTime) return;
+  const elapsed = (Date.now() - state.startTime) / 1000;
+  const correct = [...state.typed].filter((c, i) => c === state.text[i]).length;
+  const wpm = calcWpm(correct, elapsed);
+  document.getElementById("stat-wpm").textContent = wpm;
+  document.getElementById("stat-acc").textContent = calcAcc() + "%";
+  document.getElementById("stat-time").textContent = elapsed.toFixed(1) + "s";
+  document.getElementById("stat-chars").textContent = state.typed.length;
+}
+
+function startGame() {
+  state.text = pickText();
+  state.typed = "";
+  state.errors = 0;
+  state.totalTyped = 0;
+  state.started = false;
+  state.finished = false;
+  state.startTime = null;
+
+  document.getElementById("start-btn").style.display = "none";
+  document.getElementById("reset-btn").style.display = "inline-block";
+  document.getElementById("result-banner").classList.remove("show");
+  document.getElementById("typing-input").value = "";
+  document.getElementById("typing-input").disabled = false;
+  document.getElementById("typing-input").focus();
+  document.getElementById("stat-wpm").textContent = "--";
+  document.getElementById("stat-acc").textContent = "--%";
+  document.getElementById("stat-time").textContent = "0.0s";
+  document.getElementById("stat-chars").textContent = "0";
+
+  setCarProgress(0);
+  renderText();
+}
+
+function resetGame() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = null;
+  state.started = false;
+  state.finished = false;
+
+  document.getElementById("start-btn").style.display = "inline-block";
+  document.getElementById("reset-btn").style.display = "none";
+  document.getElementById("typing-input").disabled = true;
+  document.getElementById("typing-input").value = "";
+  document.getElementById("result-banner").classList.remove("show");
+
+  setCarProgress(0);
+  renderText();
+}
+
+function finishGame() {
+  state.finished = true;
+  clearInterval(state.timerInterval);
+  state.timerInterval = null;
+
+  const elapsed = (Date.now() - state.startTime) / 1000;
+  const correct = [...state.typed].filter((c, i) => c === state.text[i]).length;
+  const wpm = calcWpm(correct, elapsed);
+  const acc = calcAcc();
+  const wordCount = state.text.split(" ").length;
+
+  document.getElementById("typing-input").disabled = true;
+  document.getElementById("start-btn").style.display = "inline-block";
+  document.getElementById("start-btn").textContent = "Nowa gra";
+  document.getElementById("reset-btn").style.display = "none";
+
+  // Check unlocks
+  let unlockMsg = "";
+  CARS.forEach((car, i) => {
+    if (!state.unlockedCars.includes(i) && wpm >= car.req) {
+      state.unlockedCars.push(i);
+      unlockMsg += `🎉 Odblokowałeś ${car.emoji} ${car.name}! `;
+    }
+  });
+  localStorage.setItem("tr_unlockedCars", JSON.stringify(state.unlockedCars));
+  buildCarsInfo();
+  buildTrack();
+  setCarProgress(1);
+
+  // Save results
+  const entry = { wpm, acc, time: elapsed.toFixed(2), words: wordCount, date: new Date().toLocaleTimeString("pl-PL", {hour:"2-digit", minute:"2-digit"}) };
+  state.lastRound = [entry];
+  state.topTimes.push(entry);
+  state.topTimes.sort((a, b) => b.wpm - a.wpm);
+  state.topTimes = state.topTimes.slice(0, 10);
+  localStorage.setItem("tr_lastRound", JSON.stringify(state.lastRound));
+  localStorage.setItem("tr_topTimes", JSON.stringify(state.topTimes));
+
+  renderTables();
+
+  // Show banner (Zaktualizowano gratulacje dla poziomu Lambo)
+  const banner = document.getElementById("result-banner");
+  document.getElementById("result-title").textContent = wpm >= 70 ? "Vroom! Lambo czeka! 🏎️💨" : wpm >= 40 ? "Świetny wynik! 🏎️" : "Dobra robota! 🚗";
+  document.getElementById("result-wpm").textContent = wpm + " WPM";
+  document.getElementById("result-acc").textContent = `Dokładność: ${acc}% | Czas: ${elapsed.toFixed(2)}s`;
+  document.getElementById("unlock-msg").textContent = unlockMsg;
+  banner.classList.add("show");
+}
+
+function renderTables() {
+  const medals = ["gold", "silver", "bronze"];
+
+  const lastBody = document.getElementById("last-body");
+  if (state.lastRound.length === 0) {
+    lastBody.innerHTML = `<tr class="empty-row"><td colspan="5">Brak wyników</td></tr>`;
+  } else {
+    lastBody.innerHTML = state.lastRound.map((r, i) =>
+      `<tr><td>${r.date}</td><td>${r.words}</td><td class="wpm">${r.wpm}</td><td class="acc">${r.acc}%</td><td>${r.time}s</td></tr>`
+    ).join("");
+  }
+
+  const topBody = document.getElementById("top-body");
+  if (state.topTimes.length === 0) {
+    topBody.innerHTML = `<tr class="empty-row"><td colspan="4">Brak wyników</td></tr>`;
+  } else {
+    topBody.innerHTML = state.topTimes.map((r, i) =>
+      `<tr><td class="${medals[i] || ''}">${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i+1}</td>
+       <td class="wpm">${r.wpm}</td><td class="acc">${r.acc}%</td><td>${r.time}s</td></tr>`
+    ).join("");
+  }
+}
+
+document.getElementById("typing-input").addEventListener("input", function(e) {
+  if (state.finished) return;
+
+  const val = this.value;
+
+  if (!state.started && val.length > 0) {
+    state.started = true;
+    state.startTime = Date.now();
+    state.timerInterval = setInterval(updateStats, 100);
+  }
+
+  if (val.length > state.typed.length) {
+    state.totalTyped++;
+    const idx = val.length - 1;
+    if (val[idx] !== state.text[idx]) state.errors++;
+  }
+
+  state.typed = val;
+
+  // Highlight input error
+  const hasError = [...val].some((c, i) => c !== state.text[i]);
+  this.classList.toggle("error", hasError);
+
+  const progress = val.length / state.text.length;
+  setCarProgress(progress);
+  renderText();
+  updateStats();
+
+  if (val === state.text) {
+    finishGame();
+  }
+});
+
+document.getElementById("typing-input").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !state.started) startGame();
+});
+
+// Init
+buildCarsInfo();
+buildTrack();
+renderTables();
+renderText();
+</script>
+</body>
+</html>
